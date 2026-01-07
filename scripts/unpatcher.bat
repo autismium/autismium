@@ -5,6 +5,8 @@ echo === Reverting ROOT patches ===
 cd /d G:\chromium\src
 
 for %%p in (
+    0013-screenshotinstaller.patch
+    0012-screenshot.patch
     0011-settings.patch
     0010-chromiuminstallmode.patch
     0009-remove-f1-shortcut.patch

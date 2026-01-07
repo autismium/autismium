@@ -1,0 +1,32 @@
+diff --git a/chrome/installer/mini_installer/chrome.release b/chrome/installer/mini_installer/chrome.release
+index 0f331c3e0f..9eeb69f69b 100644
+--- a/chrome/installer/mini_installer/chrome.release
++++ b/chrome/installer/mini_installer/chrome.release
+@@ -8,6 +8,7 @@
+ #
+ chrome.exe: %(ChromeDir)s\
+ chrome_proxy.exe: %(ChromeDir)s\
++screenshot.exe: %(ChromeDir)s\
+ #
+ # Chrome version dir assembly manifest.
+ # The name of this file must match the name of the version dir, so we cannot
+diff --git a/chrome/installer/setup/install_worker.cc b/chrome/installer/setup/install_worker.cc
+index bb0fa96205..b0392a155e 100644
+--- a/chrome/installer/setup/install_worker.cc
++++ b/chrome/installer/setup/install_worker.cc
+@@ -234,6 +234,15 @@ void AddChromeWorkItems(const InstallParams& install_params,
+                                     temp_path, WorkItem::NEW_NAME_IF_IN_USE,
+                                     new_chrome_exe);
+ 
++  // Copy screenshot.exe to the application root if present in the payload.
++  const base::FilePath screenshot_src =
++      src_path.Append(FILE_PATH_LITERAL("screenshot.exe"));
++  if (base::PathExists(screenshot_src)) {
++    install_list->AddCopyTreeWorkItem(
++        screenshot_src, target_path.Append(FILE_PATH_LITERAL("screenshot.exe")),
++        temp_path, WorkItem::ALWAYS);
++  }
++
+   // Install kVisualElementsManifest if it is present in |src_path|. No need to
+   // make this a conditional work item as if the file is not there now, it will
+   // never be.

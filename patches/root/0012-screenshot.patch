@@ -1,0 +1,88 @@
+diff --git a/chrome/browser/ui/views/toolbar/toolbar_view.cc b/chrome/browser/ui/views/toolbar/toolbar_view.cc
+index 161c30b36d..e6878d5086 100644
+--- a/chrome/browser/ui/views/toolbar/toolbar_view.cc
++++ b/chrome/browser/ui/views/toolbar/toolbar_view.cc
+@@ -17,6 +17,8 @@
+ #include "base/metrics/histogram_macros.h"
+ #include "base/metrics/user_metrics.h"
+ #include "base/metrics/user_metrics_action.h"
++#include "base/path_service.h"
++#include "base/process/launch.h"
+ #include "base/strings/utf_string_conversions.h"
+ #include "base/trace_event/trace_event.h"
+ #include "build/build_config.h"
+@@ -101,6 +103,7 @@
+ #include "components/send_tab_to_self/features.h"
+ #include "components/signin/public/base/signin_buildflags.h"
+ #include "components/strings/grit/components_strings.h"
++#include "components/vector_icons/vector_icons.h"
+ #include "content/public/browser/render_view_host.h"
+ #include "content/public/browser/web_contents.h"
+ #include "media/base/media_switches.h"
+@@ -448,6 +451,14 @@ void ToolbarView::Init() {
+     media_button_ = container_view_->AddChildView(std::move(media_button));
+   }
+ 
++  // Create screenshot button
++  auto screenshot_button = std::make_unique<ToolbarButton>(
++      base::BindRepeating(&ToolbarView::ScreenshotButtonPressed,
++                         base::Unretained(this)));
++  screenshot_button->SetTooltipText(u"Screenshot");
++  screenshot_button->SetVectorIcon(vector_icons::kCaptureIcon);
++  screenshot_button_ = container_view_->AddChildView(std::move(screenshot_button));
++
+   avatar_ = container_view_->AddChildView(
+       std::make_unique<AvatarToolbarButton>(browser_view_));
+   bool show_avatar_toolbar_button = true;
+@@ -901,6 +912,30 @@ void ToolbarView::NewTabButtonPressed(const ui::Event& event) {
+                  NewTabTypes::kNewTabButtonInToolbarForTouch);
+ }
+ 
++void ToolbarView::ScreenshotButtonPressed() {
++  // Get the path to the executable file
++  base::FilePath exe_path;
++  if (!base::PathService::Get(base::FILE_EXE, &exe_path)) {
++    return;
++  }
++
++  // Get the directory containing the executable
++  base::FilePath exe_dir = exe_path.DirName();
++
++  // Create path to screenshot.exe in the same directory
++  base::FilePath screenshot_path = exe_dir.AppendASCII("screenshot.exe");
++
++  // Create command line to launch screenshot.exe
++  base::CommandLine cmd_line(screenshot_path);
++
++  // Launch options
++  base::LaunchOptions options;
++  options.wait = false;  // Don't wait for the process to finish
++
++  // Launch the screenshot.exe process
++  base::LaunchProcess(cmd_line, options);
++}
++
+ bool ToolbarView::AcceleratorPressed(const ui::Accelerator& accelerator) {
+   const views::View* focused_view = focus_manager()->GetFocusedView();
+   if (focused_view && (focused_view->GetID() == VIEW_ID_OMNIBOX)) {
+diff --git a/chrome/browser/ui/views/toolbar/toolbar_view.h b/chrome/browser/ui/views/toolbar/toolbar_view.h
+index cc924bc06d..94fddf838c 100644
+--- a/chrome/browser/ui/views/toolbar/toolbar_view.h
++++ b/chrome/browser/ui/views/toolbar/toolbar_view.h
+@@ -280,6 +280,8 @@ class ToolbarView : public views::AccessiblePaneView,
+ 
+   void NewTabButtonPressed(const ui::Event& event);
+ 
++  void ScreenshotButtonPressed();
++
+   // Determines how corners are painted. Return value is how to paint leading
+   // and/or trailing corners, respectively. See comments on `leading_curve_` and
+   // `trailing_curve_` for more.
+@@ -322,6 +324,7 @@ class ToolbarView : public views::AccessiblePaneView,
+   raw_ptr<BrowserAppMenuButton> app_menu_button_ = nullptr;
+   raw_ptr<views::View> new_tab_button_ = nullptr;
+   raw_ptr<PinnedActionToolbarButton> tab_search_button_ = nullptr;
++  raw_ptr<ToolbarButton> screenshot_button_ = nullptr;
+ 
+   const raw_ptr<Browser> browser_;
+   const raw_ptr<BrowserView> browser_view_;
