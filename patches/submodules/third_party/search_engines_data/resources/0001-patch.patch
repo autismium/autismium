@@ -1,0 +1,98 @@
+diff --git a/definitions/prepopulated_engines.json b/definitions/prepopulated_engines.json
+index cad6232..7e16e8c 100644
+--- a/definitions/prepopulated_engines.json
++++ b/definitions/prepopulated_engines.json
+@@ -118,22 +118,30 @@
+     },
+ 
+     "duckduckgo": {
+-      "name": "DuckDuckGo",
+-      "keyword": "duckduckgo.com",
+-      "favicon_url": "https://duckduckgo.com/favicon.ico",
+-      "base_builtin_resource_id": "SEARCH_ENGINE_DUCKDUCKGO",
+-      "logo_url": "https://staticcdn.duckduckgo.com/android/DuckDuckGoLogo.png",
+-      "search_url": "https://duckduckgo.com/?q={searchTerms}",
+-      "suggest_url": "https://duckduckgo.com/ac/?q={searchTerms}&type=list",
+-      "new_tab_url": "https://duckduckgo.com/chrome_newtab",
+-      "type": "SEARCH_ENGINE_DUCKDUCKGO",
+-      "id": 92,
+-      "regulatory_extensions": [
+-        {
+-          "variant": "RegulatoryExtensionType::kAndroidEEA",
+-          "search_params": "t=euandroid"
+-        }
+-      ]
++      "name": "Google",
++      "keyword": "google.com",
++      "favicon_url": "https://www.google.com/images/branding/product/ico/googleg_alldp.ico",
++      "base_builtin_resource_id": "SEARCH_ENGINE_GOOGLE",
++      "search_url": "{google:baseURL}search?q={searchTerms}&{google:RLZ}{google:originalQueryForSuggestion}{google:assistedQueryStats}{google:searchFieldtrialParameter}{google:language}{google:prefetchSource}{google:searchClient}{google:sourceId}{google:contextualSearchVersion}ie={inputEncoding}",
++      "suggest_url": "{google:baseSuggestURL}search?{google:searchFieldtrialParameter}client={google:suggestClient}&gs_ri={google:suggestRid}&xssi=t&q={searchTerms}&{google:inputType}{google:omniboxFocusType}{google:cursorPosition}{google:currentPageUrl}{google:pageClassification}{google:clientCacheTimeToLive}{google:searchVersion}{google:sessionToken}{google:prefetchQuery}sugkey={google:suggestAPIKeyParameter}",
++      "image_url": "{google:baseSearchByImageURL}upload",
++      "image_translate_url": "{google:baseSearchByImageURL}upload?filtertype=tr&{imageTranslateSourceLocale}{imageTranslateTargetLocale}",
++      "contextual_search_url": "{google:baseURL}_/contextualsearch?{google:contextualSearchVersion}{google:contextualSearchContextData}",
++      "image_url_post_params": "encoded_image={google:imageThumbnail},image_url={google:imageURL},sbisrc={google:imageSearchSource},original_width={google:imageOriginalWidth},original_height={google:imageOriginalHeight},processed_image_dimensions={google:processedImageDimensions}",
++      "image_translate_source_language_param_key": "sourcelang",
++      "image_translate_target_language_param_key": "targetlang",
++      "search_intent_params": ["si", "gs_ssp", "udm"],
++      "alternate_urls": [
++        "{google:baseURL}#q={searchTerms}",
++        "{google:baseURL}search#q={searchTerms}",
++        "{google:baseURL}webhp#q={searchTerms}",
++        "{google:baseURL}s#q={searchTerms}",
++        "{google:baseURL}s?q={searchTerms}"
++      ],
++      "type": "SEARCH_ENGINE_GOOGLE",
++      "preconnect_to_search_url" : "ALLOWED",
++      "prefetch_likely_navigations" : "ALLOWED",
++      "id": 1
+     },
+ 
+     "ecosia": {
+@@ -171,30 +179,22 @@
+     },
+ 
+     "google": {
+-      "name": "Google",
+-      "keyword": "google.com",
+-      "favicon_url": "https://www.google.com/images/branding/product/ico/googleg_alldp.ico",
+-      "base_builtin_resource_id": "SEARCH_ENGINE_GOOGLE",
+-      "search_url": "{google:baseURL}search?q={searchTerms}&{google:RLZ}{google:originalQueryForSuggestion}{google:assistedQueryStats}{google:searchFieldtrialParameter}{google:language}{google:prefetchSource}{google:searchClient}{google:sourceId}{google:contextualSearchVersion}ie={inputEncoding}",
+-      "suggest_url": "{google:baseSuggestURL}search?{google:searchFieldtrialParameter}client={google:suggestClient}&gs_ri={google:suggestRid}&xssi=t&q={searchTerms}&{google:inputType}{google:omniboxFocusType}{google:cursorPosition}{google:currentPageUrl}{google:pageClassification}{google:clientCacheTimeToLive}{google:searchVersion}{google:sessionToken}{google:prefetchQuery}sugkey={google:suggestAPIKeyParameter}",
+-      "image_url": "{google:baseSearchByImageURL}upload",
+-      "image_translate_url": "{google:baseSearchByImageURL}upload?filtertype=tr&{imageTranslateSourceLocale}{imageTranslateTargetLocale}",
+-      "contextual_search_url": "{google:baseURL}_/contextualsearch?{google:contextualSearchVersion}{google:contextualSearchContextData}",
+-      "image_url_post_params": "encoded_image={google:imageThumbnail},image_url={google:imageURL},sbisrc={google:imageSearchSource},original_width={google:imageOriginalWidth},original_height={google:imageOriginalHeight},processed_image_dimensions={google:processedImageDimensions}",
+-      "image_translate_source_language_param_key": "sourcelang",
+-      "image_translate_target_language_param_key": "targetlang",
+-      "search_intent_params": ["si", "gs_ssp", "udm"],
+-      "alternate_urls": [
+-        "{google:baseURL}#q={searchTerms}",
+-        "{google:baseURL}search#q={searchTerms}",
+-        "{google:baseURL}webhp#q={searchTerms}",
+-        "{google:baseURL}s#q={searchTerms}",
+-        "{google:baseURL}s?q={searchTerms}"
+-      ],
+-      "type": "SEARCH_ENGINE_GOOGLE",
+-      "preconnect_to_search_url" : "ALLOWED",
+-      "prefetch_likely_navigations" : "ALLOWED",
+-      "id": 1
++      "name": "DuckDuckGo",
++      "keyword": "duckduckgo.com",
++      "favicon_url": "https://duckduckgo.com/favicon.ico",
++      "base_builtin_resource_id": "SEARCH_ENGINE_DUCKDUCKGO",
++      "logo_url": "https://staticcdn.duckduckgo.com/android/DuckDuckGoLogo.png",
++      "search_url": "https://duckduckgo.com/?q={searchTerms}",
++      "suggest_url": "https://duckduckgo.com/ac/?q={searchTerms}&type=list",
++      "new_tab_url": "https://duckduckgo.com/chrome_newtab",
++      "type": "SEARCH_ENGINE_DUCKDUCKGO",
++      "id": 92,
++      "regulatory_extensions": [
++        {
++          "variant": "RegulatoryExtensionType::kAndroidEEA",
++          "search_params": "t=euandroid"
++        }
++      ]
+     },
+ 
+     "info_com": {

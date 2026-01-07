@@ -1,0 +1,1 @@
+autoninja -C out\Default chrome
