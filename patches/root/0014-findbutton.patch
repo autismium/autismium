@@ -1,0 +1,81 @@
+diff --git a/chrome/browser/ui/view_ids.h b/chrome/browser/ui/view_ids.h
+index 038af29a88..a1fa6c8ab7 100644
+--- a/chrome/browser/ui/view_ids.h
++++ b/chrome/browser/ui/view_ids.h
+@@ -51,6 +51,7 @@ enum ViewID {
+   VIEW_ID_FORWARD_BUTTON,
+   VIEW_ID_RELOAD_BUTTON,
+   VIEW_ID_HOME_BUTTON,
++  VIEW_ID_FIND_BUTTON,
+   VIEW_ID_STAR_BUTTON,
+   VIEW_ID_EXTENSIONS_MENU_BUTTON,
+   VIEW_ID_APP_MENU,
+diff --git a/chrome/browser/ui/views/toolbar/toolbar_view.cc b/chrome/browser/ui/views/toolbar/toolbar_view.cc
+index 161c30b36d..f271c0c141 100644
+--- a/chrome/browser/ui/views/toolbar/toolbar_view.cc
++++ b/chrome/browser/ui/views/toolbar/toolbar_view.cc
+@@ -98,6 +98,7 @@
+ #include "components/contextual_tasks/public/features.h"
+ #include "components/prefs/pref_service.h"
+ #include "components/safe_browsing/core/common/features.h"
++#include "components/omnibox/browser/vector_icons.h"
+ #include "components/send_tab_to_self/features.h"
+ #include "components/signin/public/base/signin_buildflags.h"
+ #include "components/strings/grit/components_strings.h"
+@@ -179,6 +180,7 @@ auto& GetViewCommandMap() {
+       {{VIEW_ID_BACK_BUTTON, IDC_BACK},
+        {VIEW_ID_FORWARD_BUTTON, IDC_FORWARD},
+        {VIEW_ID_HOME_BUTTON, IDC_HOME},
++       {VIEW_ID_FIND_BUTTON, IDC_FIND},
+        {VIEW_ID_RELOAD_BUTTON, IDC_RELOAD},
+        {VIEW_ID_AVATAR_BUTTON, IDC_SHOW_AVATAR_MENU}});
+   return kViewCommandMap;
+@@ -370,6 +372,13 @@ void ToolbarView::Init() {
+     reload_ = container_view_->AddChildView(std::move(reload));
+   }
+   home_ = container_view_->AddChildView(std::move(home));
++  std::unique_ptr<ToolbarButton> find = std::make_unique<ToolbarButton>(
++      base::BindRepeating(callback, browser_, IDC_FIND));
++  find->SetVectorIcons(omnibox::kFindInPageChromeRefreshIcon,
++                       omnibox::kFindInPageChromeRefreshIcon);
++  find->SetTooltipText(l10n_util::GetStringUTF16(IDS_TOOLTIP_FIND));
++  find->SetID(VIEW_ID_FIND_BUTTON);
++  find_button_ = container_view_->AddChildView(std::move(find));
+   std::unique_ptr<SplitTabsToolbarButton> split =
+       std::make_unique<SplitTabsToolbarButton>(browser_);
+   split_tabs_ = container_view_->AddChildView(std::move(split));
+@@ -518,8 +527,9 @@ void ToolbarView::Init() {
+ 
+   InitLayout();
+ 
+-  for (auto* button : std::array<views::Button*, 5>{back_, forward_, reload_,
+-                                                    home_, avatar_}) {
++  for (auto* button : std::array<views::Button*, 6>{back_, forward_, reload_,
++                                                    home_, find_button_,
++                                                    avatar_}) {
+     if (button) {
+       button->set_tag(GetViewCommandMap().at(button->GetID()));
+     }
+@@ -713,8 +723,8 @@ ToolbarView::GetContentSettingBubbleModelDelegate() {
+ 
+ void ToolbarView::EnabledStateChangedForCommand(int id, bool enabled) {
+   DCHECK(display_mode_ == DisplayMode::kNormal);
+-  const std::array<views::Button*, 5> kButtons{back_, forward_, reload_, home_,
+-                                               avatar_};
++  const std::array<views::Button*, 6> kButtons{back_, forward_, reload_, home_,
++                                               find_button_, avatar_};
+   auto* button = *std::ranges::find(kButtons, id, &views::Button::tag);
+   DCHECK(button);
+   button->SetEnabled(enabled);
+diff --git a/chrome/browser/ui/views/toolbar/toolbar_view.h b/chrome/browser/ui/views/toolbar/toolbar_view.h
+index cc924bc06d..fdfcadac1d 100644
+--- a/chrome/browser/ui/views/toolbar/toolbar_view.h
++++ b/chrome/browser/ui/views/toolbar/toolbar_view.h
+@@ -307,6 +307,7 @@ class ToolbarView : public views::AccessiblePaneView,
+   raw_ptr<ReloadButton> reload_ = nullptr;
+   raw_ptr<ReloadButtonWebView> reload_webview_ = nullptr;
+   raw_ptr<HomeButton> home_ = nullptr;
++  raw_ptr<ToolbarButton> find_button_ = nullptr;
+   raw_ptr<SplitTabsToolbarButton> split_tabs_ = nullptr;
+   raw_ptr<CustomTabBarView> custom_tab_bar_ = nullptr;
+   raw_ptr<LocationBarView> location_bar_ = nullptr;

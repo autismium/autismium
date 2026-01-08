@@ -18,6 +18,9 @@ for %%p in (
     0011-settings.patch
     0012-screenshot.patch
     0013-screenshotinstaller.patch
+    0014-findbutton.patch
+    0015-block-requests.patch
+    0016-disable-crash-reporter.patch
 ) do (
     echo [ROOT] Applying %%p
     git apply "G:\chromium\patches\root\%%p"

@@ -5,6 +5,9 @@ echo === Reverting ROOT patches ===
 cd /d G:\chromium\src
 
 for %%p in (
+    0016-disable-crash-reporter.patch
+    0015-block-requests.patch
+    0014-findbutton.patch
     0013-screenshotinstaller.patch
     0012-screenshot.patch
     0011-settings.patch
